@@ -1,7 +1,5 @@
 package cu.a.report.main;
 
-import com.github.javaparser.ParseException;
-import java.io.IOException;
 
 /**
  * Created by TCAYBEKEN on 9.12.2016.
@@ -10,7 +8,8 @@ import java.io.IOException;
 public class Main {
 
 
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args)  {
 
     }
+
 }
