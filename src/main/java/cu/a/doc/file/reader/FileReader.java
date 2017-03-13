@@ -1,4 +1,4 @@
-package cu.a.report.file.reader;
+package cu.a.doc.file.reader;
 
 import org.apache.log4j.Logger;
 

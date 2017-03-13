@@ -1,4 +1,4 @@
-package cu.a.report.parser;
+package cu.a.doc.parser;
 
 /**
  * Created by TCAYBEKEN on 9.12.2016.
