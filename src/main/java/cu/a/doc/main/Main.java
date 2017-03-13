@@ -1,6 +1,5 @@
 package cu.a.doc.main;
 
-
 import cu.a.doc.loader.JarLoader;
 
 /**

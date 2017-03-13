@@ -18,6 +18,11 @@
             <artifactId>cucumber-java</artifactId>
             <version>1.2.5</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.7</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

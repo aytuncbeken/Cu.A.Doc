@@ -1,5 +1,6 @@
 package cu.a.doc.loader;
 
+import cu.a.doc.data.DocData;
 import org.apache.log4j.Logger;
 
 import java.lang.annotation.Annotation;
@@ -19,11 +20,13 @@ public class JarLoader {
     private static Logger logger = Logger.getLogger(JarLoader.class);
     private String jarFilePath = null;
     private String packageName = null;
+    private DocData docData = new DocData();
 
     public JarLoader(String jarFilePath, String packageName) {
         this.jarFilePath = jarFilePath;
         this.packageName = packageName;
-        this.loadClasses(this.getClassNames());
+        this.loadClassesAndParse(this.getClassNames());
+        System.out.println(docData.getDataAsJsonString());
     }
 
     private ArrayList<String> getClassNames()
@@ -50,7 +53,7 @@ public class JarLoader {
         }
     }
 
-    private void loadClasses(ArrayList<String> classNames)
+    private void loadClassesAndParse(ArrayList<String> classNames)
     {
         try
         {
@@ -58,16 +61,28 @@ public class JarLoader {
             for(String className : classNames)
             {
                 Class stepClass = urlClassLoader.loadClass(className);
+                String stepClassName = stepClass.getSimpleName();
+                if( stepClassName == null) {
+                    logger.error("Step Class Name is Null - Continue");
+                    continue;
+                }
                 Method[] stepClassMethods = stepClass.getMethods();
                 for(Method stepClassMethod : stepClassMethods)
                 {
-                    Annotation cucumberAnd = stepClassMethod.getAnnotation(cucumber.api.java.en.And.class);
-                    Annotation cucumberGiven = stepClassMethod.getAnnotation(cucumber.api.java.en.Given.class);
-                    if( cucumberAnd != null || cucumberGiven != null) {
-                        System.out.println(stepClassMethod.toString());
+                    Annotation cuADocAnn = stepClassMethod.getAnnotation(cu.a.doc.annonation.CuADoc.class);
+                    if( cuADocAnn != null) {
+                        String purpose = cuADocAnn.annotationType().getMethod("purpose").invoke(cuADocAnn).toString();
+                        Object params = cuADocAnn.annotationType().getMethod("params").invoke(cuADocAnn);
+                        Annotation cucumberAnn = stepClassMethod.getAnnotation(cucumber.api.java.en.And.class);
+                        if( cucumberAnn == null)
+                            cucumberAnn = stepClassMethod.getAnnotation(cucumber.api.java.en.Given.class);
+                        if( cucumberAnn != null)
+                        {
+                            String cucumberDefinition = cucumberAnn.annotationType().getMethod("value").invoke(cucumberAnn).toString();
+                            docData.addClassToData(stepClassName,cucumberDefinition,purpose,params);
+                        }
                     }
                 }
-
             }
         } catch (Exception e) {
             logger.error(e);
