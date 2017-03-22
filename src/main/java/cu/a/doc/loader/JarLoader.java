@@ -13,7 +13,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * Created by TCAYBEKEN on 10.3.2017.
+ * Created by Aytunc BEKEN on 10.3.2017.
  */
 public class JarLoader {
 
@@ -26,7 +26,6 @@ public class JarLoader {
         this.jarFilePath = jarFilePath;
         this.packageName = packageName;
         this.loadClassesAndParse(this.getClassNames());
-        System.out.println(docData.getDataAsJsonString());
     }
 
     private ArrayList<String> getClassNames()
@@ -73,13 +72,14 @@ public class JarLoader {
                     if( cuADocAnn != null) {
                         String purpose = cuADocAnn.annotationType().getMethod("purpose").invoke(cuADocAnn).toString();
                         Object params = cuADocAnn.annotationType().getMethod("params").invoke(cuADocAnn);
+                        Object escapes = cuADocAnn.annotationType().getMethod("escapes").invoke(cuADocAnn);
                         Annotation cucumberAnn = stepClassMethod.getAnnotation(cucumber.api.java.en.And.class);
                         if( cucumberAnn == null)
                             cucumberAnn = stepClassMethod.getAnnotation(cucumber.api.java.en.Given.class);
                         if( cucumberAnn != null)
                         {
                             String cucumberDefinition = cucumberAnn.annotationType().getMethod("value").invoke(cucumberAnn).toString();
-                            docData.addClassToData(stepClassName,cucumberDefinition,purpose,params);
+                            docData.addClassToData(stepClassName,cucumberDefinition,purpose,params, escapes);
                         }
                     }
                 }
