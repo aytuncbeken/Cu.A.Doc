@@ -2,7 +2,7 @@ package cu.a.doc.loader;
 
 import cu.a.doc.data.DocData;
 import org.apache.log4j.Logger;
-
+import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -20,12 +20,34 @@ public class JarLoader {
     private static Logger logger = Logger.getLogger(JarLoader.class);
     private String jarFilePath = null;
     private String packageName = null;
+    private String htmlFilePath = null;
     private DocData docData = new DocData();
 
-    public JarLoader(String jarFilePath, String packageName) {
+    public JarLoader(String jarFilePath, String packageName, String htmlFilePath) {
         this.jarFilePath = jarFilePath;
         this.packageName = packageName;
+        this.htmlFilePath = htmlFilePath;
         this.loadClassesAndParse(this.getClassNames());
+        if( htmlFilePath != null)
+        {
+            this.exportHtmlToFile();
+        }
+    }
+
+
+    public DocData getDocData() {
+        return docData;
+    }
+
+    private void exportHtmlToFile()
+    {
+        try{
+            PrintWriter writer = new PrintWriter(this.htmlFilePath, "UTF-8");
+            writer.print(this.docData.generateHtml());
+            writer.close();
+        } catch (Exception e) {
+            logger.error(e);
+        }
     }
 
     private ArrayList<String> getClassNames()
@@ -47,7 +69,7 @@ public class JarLoader {
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error(e.toString(),e);
             return null;
         }
     }
