@@ -1,6 +1,7 @@
 package cu.a.doc.main;
 
 import cu.a.doc.loader.JarLoader;
+import cu.a.doc.utils.Utils;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 
@@ -16,10 +17,12 @@ public class CuADocRunner {
     private static String htmlFilePathKey = "htmlFilePath";
 
     public CuADocRunner(String jarFilePath, String stepPackageName, String htmlFilePath) {
+        logger.info("Constructor With Params:" + Utils.getParamsAsJson(jarFilePath,stepPackageName,htmlFilePath));
         this.jarLoader = new JarLoader(jarFilePath,stepPackageName,htmlFilePath);
     }
 
     public CuADocRunner(String stepPackageName, String htmlFilePath) {
+        logger.info("Constructor With Params:" + Utils.getParamsAsJson(stepPackageName,htmlFilePath));
         this.jarLoader = new JarLoader(stepPackageName,htmlFilePath);
     }
 
@@ -45,6 +48,7 @@ public class CuADocRunner {
 
     private static void checkAndRun(String[] args)
     {
+        logger.info("CheckAndRun With Params:" + Utils.getParamsAsJson(args));
         Options cliOptions = new Options();
         CommandLineParser commandLineParser = new BasicParser();
         CommandLine commandLine = null;
@@ -53,13 +57,10 @@ public class CuADocRunner {
             cliOptions.addOption(stepPackageNameKey, true, "Package Name of Step Definitions");
             cliOptions.addOption(htmlFilePathKey, true, "Html File Full Path For Storing Doc");
             commandLine = commandLineParser.parse(cliOptions, args);
+            logger.info("Options:" + Utils.getParamsAsJson(commandLine.getOptionValue(jarFilePathKey),commandLine.getOptionValue(stepPackageNameKey),commandLine.getOptionValue(htmlFilePathKey)));
             if( commandLine.hasOption(jarFilePathKey) && commandLine.hasOption(stepPackageNameKey) && commandLine.hasOption(htmlFilePathKey))
             {
                 new CuADocRunner(commandLine.getOptionValue(jarFilePathKey),commandLine.getOptionValue(stepPackageNameKey),commandLine.getOptionValue(htmlFilePathKey));
-            }
-            else if( commandLine.hasOption(jarFilePathKey) == false && commandLine.hasOption(stepPackageNameKey) && commandLine.hasOption(htmlFilePathKey))
-            {
-                new CuADocRunner(commandLine.getOptionValue(stepPackageNameKey),commandLine.getOptionValue(htmlFilePathKey));
             }
             else
             {
