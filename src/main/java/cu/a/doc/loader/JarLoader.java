@@ -2,6 +2,7 @@ package cu.a.doc.loader;
 
 import cu.a.doc.data.DocData;
 import org.apache.log4j.Logger;
+import java.io.File;
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -21,18 +22,32 @@ public class JarLoader {
     private String jarFilePath = null;
     private String packageName = null;
     private String htmlFilePath = null;
+    private boolean loadFromJar = true;
     private DocData docData = new DocData();
 
     public JarLoader(String jarFilePath, String packageName, String htmlFilePath) {
         this.jarFilePath = jarFilePath;
         this.packageName = packageName;
         this.htmlFilePath = htmlFilePath;
-        this.loadClassesAndParse(this.getClassNames());
+        this.loadClassesAndParse(this.getClassNamesFromJarFile());
         if( htmlFilePath != null)
         {
             this.exportHtmlToFile();
         }
     }
+
+    public JarLoader( String packageName, String htmlFilePath) {
+        this.packageName = packageName;
+        this.htmlFilePath = htmlFilePath;
+        this.loadFromJar = false;
+        this.loadClassesAndParse(this.getClassNamesFromInternalPackage());
+        if( htmlFilePath != null)
+        {
+            this.exportHtmlToFile();
+        }
+    }
+
+
 
 
     public DocData getDocData() {
@@ -50,10 +65,10 @@ public class JarLoader {
         }
     }
 
-    private ArrayList<String> getClassNames()
+    private ArrayList<String> getClassNamesFromJarFile()
     {
+        ArrayList<String> classNames = new ArrayList<>();
         try {
-            ArrayList<String> classNames = new ArrayList<String>();
             JarFile jarFile = new JarFile(this.jarFilePath);
             Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
             while (jarEntryEnumeration.hasMoreElements()) {
@@ -65,12 +80,54 @@ public class JarLoader {
                     classNames.add(className);
                 }
             }
-            return classNames;
         }
         catch (Exception e)
         {
             logger.error(e.toString(),e);
             return null;
+        }
+        finally {
+            return classNames;
+        }
+    }
+
+    public ArrayList<String> getClassNamesFromInternalPackage()
+    {
+        ArrayList<String> classNames = new ArrayList<>();
+        try
+        {
+            ArrayList<String> resourceDirs = new ArrayList<>();
+            String packageNameWithSlash =  this.packageName.replace(".","/");
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            Enumeration resources = classLoader.getResources(packageNameWithSlash);
+            while(resources.hasMoreElements())
+            {
+                URL url = (URL) resources.nextElement();
+                resourceDirs.add(url.getFile());
+            }
+
+            for(String resourceDir: resourceDirs)
+            {
+                File[] packageFiles = new File(resourceDir).listFiles();
+                for(File classFile : packageFiles)
+                {
+                    String classFileName = classFile.getName();
+                    if( classFileName != null && classFileName.contains(".class") )
+                    {
+                        classFileName = classFileName.substring(0,classFileName.length()-6);
+                        String classNameWithPackage = this.packageName + "." +  classFileName;
+                        classNames.add(classNameWithPackage);
+                    }
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        finally {
+            return classNames;
         }
     }
 
@@ -78,10 +135,18 @@ public class JarLoader {
     {
         try
         {
-            URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] {new URL("jar:file:"+this.jarFilePath + "!/")});
+            URLClassLoader urlClassLoader = null;
+            Class stepClass = null;
+            if( this.loadFromJar)
+                urlClassLoader = URLClassLoader.newInstance(new URL[] {new URL("jar:file:"+this.jarFilePath + "!/")});
+
             for(String className : classNames)
             {
-                Class stepClass = urlClassLoader.loadClass(className);
+
+                if( this.loadFromJar)
+                    stepClass = urlClassLoader.loadClass(className);
+                else
+                    stepClass = Class.forName(className);
                 String stepClassName = stepClass.getSimpleName();
                 if( stepClassName == null) {
                     logger.error("Step Class Name is Null - Continue");
