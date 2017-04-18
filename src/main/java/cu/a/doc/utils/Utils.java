@@ -3,7 +3,7 @@ package cu.a.doc.utils;
 import com.google.gson.JsonObject;
 
 /**
- * Created by TCAYBEKEN on 10.4.2017.
+ * Created by Aytunc Beken on 10.4.2017.
  * This class contains helper method which are used widely
  */
 public class Utils {
