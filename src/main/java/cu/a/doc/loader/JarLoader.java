@@ -16,6 +16,7 @@ import java.util.jar.JarFile;
 
 /**
  * Created by Aytunc BEKEN on 10.3.2017.
+ * This class loads given jar file or package and parse Cu.A.Doc annotations
  */
 public class JarLoader {
 
@@ -26,6 +27,12 @@ public class JarLoader {
     private boolean loadFromJar = true;
     private DocData docData = new DocData();
 
+    /**
+     * Constructor which is used when loading Cucumber Steps definitions from jar file
+     * @param jarFilePath Jar file name with full path to load and parse
+     * @param packageName Package name which have Cucumber Steps definition class files
+     * @param htmlFilePath Html file name with full path. If given null, no html file is generated
+     */
     public JarLoader(String jarFilePath, String packageName, String htmlFilePath) {
         logger.debug("Constructor With Params:" + Utils.getParamsAsJson(jarFilePath, packageName, htmlFilePath));
         this.jarFilePath = jarFilePath;
@@ -39,6 +46,11 @@ public class JarLoader {
         }
     }
 
+    /**
+     * Constructor which is used when loading Cucumber Steps definitions from package at runtime
+     * @param packageName Package name which have Cucumber Steps definition class files
+     * @param htmlFilePath Html file name with full path. If given null, no html file is generated
+     */
     public JarLoader( String packageName, String htmlFilePath) {
         logger.debug("Constructor With Params:" + Utils.getParamsAsJson(packageName, htmlFilePath));
         this.packageName = packageName;
@@ -53,12 +65,17 @@ public class JarLoader {
     }
 
 
-
-
+    /**
+     * Return DocData object which contains parsed Cu.A.Doc data
+     * @return DocData object
+     */
     public DocData getDocData() {
         return docData;
     }
 
+    /**
+     * Export Html report to given html file at constructor
+     */
     private void exportHtmlToFile()
     {
         try{
@@ -72,6 +89,10 @@ public class JarLoader {
         }
     }
 
+    /**
+     * Get class names from given jar file in given package
+     * @return ArrayList<String> which contains class names to be parsed
+     */
     private ArrayList<String> getClassNamesFromJarFile()
     {
         logger.info("Get Class Names From Jar File");
@@ -103,6 +124,10 @@ public class JarLoader {
         }
     }
 
+    /**
+     * Get class names from given package name at runtime
+     * @return ArrayList<String> which contains class names to be parsed
+     */
     public ArrayList<String> getClassNamesFromInternalPackage()
     {
         logger.info("Get Class Names From Internal Package");
@@ -149,6 +174,10 @@ public class JarLoader {
         }
     }
 
+    /**
+     * Load Class file, parse gherkin and Cu.A.Doc annotations and gives to DocData object
+     * @param classNames ArrayList<String> class names to be parsed
+     */
     private void loadClassesAndParse(ArrayList<String> classNames)
     {
         try
@@ -207,7 +236,6 @@ public class JarLoader {
             logger.error(e.toString(),e);
         }
     }
-
 
 
 }
