@@ -65,7 +65,7 @@ Cu.A.Doc can be used with in different ways.
    
 Output
 ------
-<html><head><title>Cu.A.Doc - Cucumber Documentation</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body><table><tr><td><h2>Cu.A.Doc - Cucumber Step Definitions Documentation</h2></td></tr><tr><td><table><tr><td><ul><li><span><b>Package:Steps</b></span><br/><br/><ul><li><span><b>Command:</b></span>Do something with this step definition param1 &quot;Parameter&quot; param2 &quot;Parameter&quot;<br/><span><b>Purpose:</b></span>This step does something<br/><b>Parameter:</b>definition for param1<br/><b>Parameter:</b>definition for param2<br/></li><br/></ul></li></ul></td></tr></table></td></tr></table></body></html>
+<html><head></head><body><table><tr><td><h2>Cu.A.Doc - Cucumber Step Definitions Documentation</h2></td></tr><tr><td><table><tr><td><ul><li><span><b>Package:Steps</b></span><br/><br/><ul><li><span><b>Command:</b></span>Do something with this step definition param1 &quot;Parameter&quot; param2 &quot;Parameter&quot;<br/><span><b>Purpose:</b></span>This step does something<br/><b>Parameter:</b>definition for param1<br/><b>Parameter:</b>definition for param2<br/></li><br/></ul></li></ul></td></tr></table></td></tr></table></body></html>
 
 
 Limitations
