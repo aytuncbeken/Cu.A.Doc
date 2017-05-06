@@ -19,15 +19,31 @@ Within more attributes in Cu.A.Doc annotation, you can create more human-readabl
 purpose: Explain the purpose of the Cucumber-Java Step definition
 params: Explain the parameters of the Cucumber-Java Step definition
 escapes: Escape special characters with space in Regex Expression
+         If you put :P at the end of the escape string, it will replace with "parameter" String
+
 
 Usage
 -----
 Cu.A.Doc can be used with in different ways.
 
 1. Define Annotation
-   Add CuADoc.jar file into your project. After that you can define @CuADoc Annotation in your Cucumber-Java Step definitions
+   Add CuADoc.jar file into your project.
+   
+2. Define CuADoc annotations for Cucumber-Java Step Definitions.
 
-2. Generate Report
+   ```
+    @CuADoc(purpose = "This step does something",params = {"definition for param1","definition for param2"},escapes = {"^(?i)","(.*):P"," ","$"})
+    ```
+    ```
+    @Given("^(?i)Do something with this step definition param1 \"(.*)\" param2 \"(.*)\" $")
+    ```
+    ```
+    public void doSomething(String parameter1, String parameter2) {
+      //Do something
+    }
+   ```
+
+3. Generate Report
    There are two ways for generating document (html, json).
    
    First add CuADoc.jar file into your project.
@@ -47,7 +63,9 @@ Cu.A.Doc can be used with in different ways.
    
    You can look into JavaDoc for further usage.
    
-   
+Output
+------
+<html><head><title>Cu.A.Doc - Cucumber Documentation</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body><table><tr><td><h2>Cu.A.Doc - Cucumber Step Definitions Documentation</h2></td></tr><tr><td><table><tr><td><ul><li><span><b>Package:Steps</b></span><br/><br/><ul><li><span><b>Command:</b></span>Do something with this step definition param1 &quot;Parameter&quot; param2 &quot;Parameter&quot;<br/><span><b>Purpose:</b></span>This step does something<br/><b>Parameter:</b>definition for param1<br/><b>Parameter:</b>definition for param2<br/></li><br/></ul></li></ul></td></tr></table></td></tr></table></body></html>
 Limitations
 -----------
 Cu.A.Doc is only works for @Given and @And Cucumber annotations, others will be implemented in time.
