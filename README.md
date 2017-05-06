@@ -30,7 +30,7 @@ Cu.A.Doc can be used with in different ways.
 2. Generate Report
    There are two ways for generating document (html, json).
    
-   First add CuaDoc.jar file into your project.
+   First add CuADoc.jar file into your project.
    
    **Generate document with in your runtime**, which need two parameters. First parameter is package name (Ex: com.your.code.steps) which has Java files for Cucumber-Java step definitions.
    Second is the full file path for generated html file.
