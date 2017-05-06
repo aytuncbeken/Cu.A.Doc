@@ -1,4 +1,4 @@
-![logo](https://cloud.githubusercontent.com/assets/17325506/25775119/47ef2c8a-32a6-11e7-9ee6-a970a4db40d3.png)
+<img src="https://cloud.githubusercontent.com/assets/17325506/25775119/47ef2c8a-32a6-11e7-9ee6-a970a4db40d3.png"/>
 
 Cu.A.Doc
 ========
